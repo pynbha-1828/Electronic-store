@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Electronic_Store</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            margin:0;
+            background:#f2f2f2;
+        }
+
+        .navbar{
+            background:black;
+            color:white;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .navbar a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-size:18px;
+        }
+
+        .category{
+            display:flex;
+            justify-content:center;
+            gap:20px;
+            background:white;
+            padding:15px;
+        }
+
+        .category h3{
+            cursor:pointer;
+        }
+
+        .products{
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            gap:20px;
+            margin-top:20px;
+        }
+
+        .card{
+            background:white;
+            width:220px;
+            padding:15px;
+            border-radius:10px;
+            text-align:center;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .card img{
+            width:180px;
+            height:180px;
+            object-fit:cover;
+        }
+
+        button{
+            padding:10px;
+            margin:5px;
+            border:none;
+            color:white;
+            cursor:pointer;
+            border-radius:5px;
+        }
+
+        .cartbtn{
+            background:blue;
+        }
+
+        .orderbtn{
+            background:green;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="navbar">
+
+    <h2 onclick="showAll()" style="cursor:pointer;">
+        Electronic Store
+    </h2>
+
+    <div>
+
+        <a href="home.html">Home</a>
+
+        <a href="cart.html">Cart</a>
+        
+        <a href="orders.html">Orders</a>
+
+        <a href="#" onclick="logout()">Logout</a>
+
+    </div>
+
+</div>
+
+<div class="category">
+
+    <h3 onclick="showCategory('phone')">Phones</h3>
+
+    <h3 onclick="showCategory('laptop')">Laptops</h3>
+
+    <h3 onclick="showCategory('watch')">Watches</h3>
+
+    <h3 onclick="showCategory('accessory')">Accessories</h3>
+
+</div>
+
+<div class="products" id="products"></div>
+
+<script>
+
+const products = [
+
+    {
+        name:"iPhone 15",
+        price:"79999",
+        category:"phone",
+        image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"
+    },
+
+    {
+        name:"Samsung S24",
+        price:"69999",
+        category:"phone",
+        image:"https://images.unsplash.com/photo-1598327105666-5b89351aff97"
+    },
+
+    {
+        name:"OnePlus 12",
+        price:"59999",
+        category:"phone",
+        image:"https://images.unsplash.com/photo-1580910051074-3eb694886505"
+    },
+
+    {
+        name:"Realme GT",
+        price:"29999",
+        category:"phone",
+        image:"https://images.unsplash.com/photo-1510557880182-3b52bde3a0cb"
+    },
+
+    {
+        name:"HP Victus",
+        price:"65000",
+        category:"laptop",
+        image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853"
+    },
+
+    {
+        name:"MacBook Air",
+        price:"95000",
+        category:"laptop",
+        image:"https://images.unsplash.com/photo-1517336714739-489689fd1ca8"
+    },
+
+    {
+        name:"Lenovo Legion",
+        price:"85000",
+        category:"laptop",
+        image:"https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+    },
+
+    {
+        name:"Apple Watch",
+        price:"25000",
+        category:"watch",
+        image:"https://images.unsplash.com/photo-1546868871-7041f2a55e12"
+    },
+
+    {
+        name:"Noise Watch",
+        price:"2999",
+        category:"watch",
+        image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+    },
+
+    {
+        name:"AirPods",
+        price:"14999",
+        category:"accessory",
+        image:"https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46"
+    },
+
+    {
+        name:"Gaming Mouse",
+        price:"1999",
+        category:"accessory",
+        image:"https://images.unsplash.com/photo-1527814050087-3793815479db"
+    }
+
+];
+
+function showCategory(category){
+
+    const productDiv = document.getElementById("products");
+
+    productDiv.innerHTML = "";
+
+    const filtered = products.filter(
+        product => product.category === category
+    );
+
+    filtered.forEach(product => {
+
+        productDiv.innerHTML += `
+
+        <div class="card">
+
+            <img src="${product.image}">
+
+            <h2>${product.name}</h2>
+
+            <p>₹${product.price}</p>
+
+            <button class="cartbtn"
+            onclick="addToCart('${product.name}','${product.price}','${product.image}')">
+            Add To Cart
+            </button>
+
+            <button class="orderbtn"
+            onclick="orderNow('${product.name}','${product.price}','${product.image}')">
+            Order
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function showAll(){
+
+    const productDiv = document.getElementById("products");
+
+    productDiv.innerHTML = "";
+
+    products.forEach(product => {
+
+        productDiv.innerHTML += `
+
+        <div class="card">
+
+            <img src="${product.image}">
+
+            <h2>${product.name}</h2>
+
+            <p>₹${product.price}</p>
+
+            <button class="cartbtn"
+            onclick="addToCart('${product.name}','${product.price}','${product.image}')">
+            Add To Cart
+            </button>
+
+            <button class="orderbtn"
+            onclick="orderNow('${product.name}','${product.price}','${product.image}')">
+            Order
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+
+async function addToCart(name,price,image){
+
+    const user_id = localStorage.getItem("user_id");
+
+    console.log("USER ID:", user_id);
+
+    const res = await fetch("/addcart",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify({
+            user_id,
+            product_name:name,
+            price:price,
+            image:image
+        })
+
+    });
+
+    const data = await res.text();
+
+    alert(data);
+
+}
+
+
+
+async function orderNow(name,price,image){
+
+    const user_id = localStorage.getItem("user_id");
+
+    const res = await fetch("/order",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body: JSON.stringify({
+            user_id,
+            product_name:name,
+            price:price,
+            image:image
+        })
+
+    });
+
+    const data = await res.text();
+
+    alert(data);
+
+}
+
+
+
+function logout(){
+
+    localStorage.removeItem("user_id");
+
+    alert("Logged Out");
+
+    window.location.href = "login.html";
+
+}
+
+showAll();
+
+</script>
+
+</body>
+</html>

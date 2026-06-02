@@ -10,6 +10,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.static(__dirname + "/Public"));
+app.use("/admin", express.static(__dirname + "/admin"));
 
 
 
@@ -282,6 +283,117 @@ app.post("/addproduct",(req,res)=>{
 
 });
 
+// GET ALL USERS
+app.get("/api/users", (req, res) => {
+    db.query("SELECT * FROM user", (err, result) => {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+// GET ALL PRODUCTS
+app.get("/api/products", (req, res) => {
+    db.query("SELECT * FROM product", (err, result) => {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+// GET ALL ORDERS
+app.get("/api/orders", (req, res) => {
+    db.query("SELECT * FROM orders", (err, result) => {
+        if (err) {
+            res.status(500).json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+// DASHBOARD COUNTS
+app.get("/api/dashboard", (req, res) => {
+
+    db.query("SELECT COUNT(*) AS users FROM user", (e1, users) => {
+
+        db.query("SELECT COUNT(*) AS products FROM product", (e2, products) => {
+
+            db.query("SELECT COUNT(*) AS orders FROM orders", (e3, orders) => {
+
+                res.json({
+                    users: users[0].users,
+                    products: products[0].products,
+                    orders: orders[0].orders
+                });
+
+            });
+
+        });
+
+    });
+
+});
+
+app.post("/api/add-product", (req, res) => {
+
+    const { name, price, image, category } = req.body;
+
+    const sql =
+    "INSERT INTO product(name,price,image,category) VALUES(?,?,?,?)";
+
+    db.query(
+        sql,
+        [name, price, image, category],
+        (err, result) => {
+
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                res.json({
+                    success: true,
+                    message: "Product Added"
+                });
+            }
+
+        }
+    );
+
+});
+
+app.get("/api/dashboard", (req, res) => {
+
+    db.query("SELECT COUNT(*) AS users FROM user", (err, users) => {
+
+        db.query("SELECT COUNT(*) AS products FROM product", (err, products) => {
+
+            db.query("SELECT COUNT(*) AS orders FROM orders", (err, orders) => {
+
+                db.query(
+                    "SELECT IFNULL(SUM(price),0) AS sales FROM orders",
+                    (err, sales) => {
+
+                        res.json({
+                            users: users[0].users,
+                            products: products[0].products,
+                            orders: orders[0].orders,
+                            sales: sales[0].sales
+                        });
+
+                    }
+                );
+
+            });
+
+        });
+
+    });
+
+});
 
 // SERVER
 
